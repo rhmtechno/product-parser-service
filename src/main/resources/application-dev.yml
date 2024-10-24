@@ -1,0 +1,17 @@
+server:
+  port: 5083
+
+
+spring:
+  sleuth:
+    sampler:
+      probability: 1.0
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product_db?createDatabaseIfNotExist=true
+    #url: jdbc:postgresql://host.docker.internal:5432/product_db?createDatabaseIfNotExist=true
+    username: postgres
+    password: mysecretpassword
+
+
+logging:
+  config: classpath:log/logback-dev.xml

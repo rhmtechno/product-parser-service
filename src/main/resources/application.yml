@@ -1,0 +1,50 @@
+server:
+  port: 0
+  shutdown: graceful
+
+log:
+  dir: parser
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: Parser Service
+    description: This service is responsible for parse data.
+    version: 1.0
+
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: parser-service
+  lifecycle:
+    timeout-per-shutdown-phase: "90s"
+  datasource:
+    hikari:
+      maximum-pool-size: 9
+  jpa:
+    database-platform: postgres
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+
+springdoc:
+  paths-to-exclude: /swagger-resources/**, /v3/api-docs/**, /v2/api-docs/**

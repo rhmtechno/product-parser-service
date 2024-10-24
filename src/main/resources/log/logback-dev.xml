@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <property name="DEV_HOME" value="./logs"/>
+    <springProperty scope="context" name="SERVICE_NAME" source="spring.application.name"/>
+    <springProperty scope="context" name="SERVICE_DIR" source="log.dir"/>
+
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+    <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    <property name="FILE_LOG_PATTERN" value="${FILE_LOG_PATTERN:-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} %5p [Service Name: ${SERVICE_NAME}, TraceId: %X{traceId:-}, SpanId: %X{spanId:-}] ${PID:- } --- [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+
+    <property name="INFO_ARCHIVE_FILE_PATTERN" value="${DEV_HOME}/info/archive/${SERVICE_DIR}/${SERVICE_NAME}-info-log.%d{yyyy-MM-dd-HH}.%i.log.gz"/>
+    <property name="WARN_ARCHIVE_FILE_PATTERN" value="${DEV_HOME}/warn/archive/${SERVICE_DIR}/${SERVICE_NAME}-warn-log.%d{yyyy-MM-dd-HH}.%i.log.gz"/>
+    <property name="TRACE_ARCHIVE_FILE_PATTERN" value="${DEV_HOME}/trace/archive/${SERVICE_DIR}/${SERVICE_NAME}-trace-log.%d{yyyy-MM-dd-HH}.%i.log.gz"/>
+    <property name="DEBUG_ARCHIVE_FILE_PATTERN" value="${DEV_HOME}/error/archive/${SERVICE_DIR}/${SERVICE_NAME}-debug-log.%d{yyyy-MM-dd-HH}.%i.log.gz"/>
+    <property name="ERROR_ARCHIVE_FILE_PATTERN" value="${DEV_HOME}/error/archive/${SERVICE_DIR}/${SERVICE_NAME}-error-log.%d{yyyy-MM-dd-HH}.%i.log.gz"/>
+    <property name="PERFORMANCE_ARCHIVE_FILE_PATTERN" value="${DEV_HOME}/performance/archive/${SERVICE_DIR}/${SERVICE_NAME}-performance-log.%d{yyyy-MM-dd-HH}.%i.log.gz"/>
+
+    <property name="INTEGRATION_TRACE_ARCHIVE_FILE_PATTERN" value="${DEV_HOME}/integration/archive/${SERVICE_DIR}/${SERVICE_NAME}-integration-log.%d{yyyy-MM-dd-HH}.%i.log.gz"/>
+    <property name="INTEGRATION_PERFORMANCE_ARCHIVE_FILE_PATTERN" value="${DEV_HOME}/integration/archive/${SERVICE_DIR}/${SERVICE_NAME}-performance-log.%d{yyyy-MM-dd-HH}.%i.log.gz"/>
+
+    <property name="MAX_FILE_SIZE" value="100MB"/>
+    <property name="MAX_NO_OF_FILE" value="1080"/>
+
+    <appender name="STDOUT_CONSOLE_APPENDER" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="TRACE_FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${DEV_HOME}/trace/${SERVICE_NAME}-trace.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${TRACE_ARCHIVE_FILE_PATTERN}</fileNamePattern>
+            <maxHistory>${MAX_NO_OF_FILE}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="INTEGRATION_TRACE_FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${DEV_HOME}/integration/${SERVICE_NAME}-integration.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${INTEGRATION_TRACE_ARCHIVE_FILE_PATTERN}</fileNamePattern>
+            <maxHistory>${MAX_NO_OF_FILE}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="INTEGRATION_PERFORMANCE_FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${DEV_HOME}/integration/${SERVICE_NAME}-performance.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${INTEGRATION_PERFORMANCE_ARCHIVE_FILE_PATTERN}</fileNamePattern>
+            <maxHistory>${MAX_NO_OF_FILE}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ERROR_FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${DEV_HOME}/error/${SERVICE_NAME}-error.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${ERROR_ARCHIVE_FILE_PATTERN}</fileNamePattern>
+            <maxHistory>${MAX_NO_OF_FILE}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="PERFORMANCE_FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${DEV_HOME}/performance/${SERVICE_NAME}-performance.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PERFORMANCE_ARCHIVE_FILE_PATTERN}</fileNamePattern>
+            <maxHistory>${MAX_NO_OF_FILE}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!--<appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5000</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc />
+                <context />
+                <logLevel />
+                <loggerName />
+                <pattern>
+                    <pattern>
+                        {
+                        "appName": "app-one"
+                        }
+                    </pattern>
+                </pattern>
+                <threadName />
+                <message />
+                <logstashMarkers />
+                <stackTrace />
+                <arguments/>
+            </providers>
+        </encoder>
+    </appender>-->
+
+    <logger name="errorLogger" level="ERROR" additivity="false">
+        <appender-ref ref="ERROR_FILE_APPENDER"/>
+    </logger>
+
+    <logger name="traceLogger" level="TRACE" additivity="false">
+        <appender-ref ref="TRACE_FILE_APPENDER"/>
+        <!--<appender-ref ref="LOGSTASH"/>-->
+    </logger>
+
+    <logger name="performanceLogger" level="TRACE" additivity="false">
+        <appender-ref ref="PERFORMANCE_FILE_APPENDER"/>
+    </logger>
+
+    <logger name="integrationTraceLogger" level="TRACE" additivity="false">
+        <appender-ref ref="INTEGRATION_TRACE_FILE_APPENDER"/>
+    </logger>
+
+    <logger name="integrationPerformanceLogger" level="TRACE" additivity="false">
+        <appender-ref ref="INTEGRATION_PERFORMANCE_FILE_APPENDER"/>
+    </logger>
+
+    <!--<root level="info">
+        <appender-ref ref="STDOUT_CONSOLE_APPENDER"/>
+    </root>-->
+
+</configuration>
