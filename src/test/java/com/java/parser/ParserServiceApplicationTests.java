@@ -37,7 +37,7 @@ public class ParserServiceApplicationTests {
 
         when(productService.getProductBySku("SKU001")).thenReturn(null);
 
-        xlsxParserImplService.parse(testFile);
+        xlsxParserImplService.parse(testFile,"test");
 
         verify(productService, times(1)).saveOrUpdate(argThat(product ->
                 "SKU001".equals(product.getSku()) &&
@@ -50,11 +50,11 @@ public class ParserServiceApplicationTests {
     @Test
     void parse_shouldUpdateProduct_whenProductExistsAndChangesDetected() throws Exception {
         InputStream testFile = createTestFile("SKU002", "Updated Product", 150.00, 20);
-        Product existingProduct = new Product("SKU002", "Old Product", BigDecimal.valueOf(100.00), 10);
+        Product existingProduct = new Product("SKU002", "Old Product", BigDecimal.valueOf(100.00), 10,"rid");
 
         when(productService.getProductBySku("SKU002")).thenReturn(existingProduct);
 
-        xlsxParserImplService.parse(testFile);
+        xlsxParserImplService.parse(testFile,"test");
 
         verify(productService, times(1)).saveOrUpdate(argThat(product ->
                 "SKU002".equals(product.getSku()) &&
@@ -67,11 +67,11 @@ public class ParserServiceApplicationTests {
     @Test
     void parse_shouldNotUpdateProduct_whenProductExistsAndNoChangesDetected() throws Exception {
         InputStream testFile = createTestFile("SKU003", "Same Product", 200.00, 30);
-        Product existingProduct = new Product("SKU003", "Same Product", BigDecimal.valueOf(200.00), 30);
+        Product existingProduct = new Product("SKU003", "Same Product", BigDecimal.valueOf(200.00), 30,"rid");
 
         when(productService.getProductBySku("SKU003")).thenReturn(existingProduct);
 
-        xlsxParserImplService.parse(testFile);
+        xlsxParserImplService.parse(testFile,"test");
 
         verify(productService, times(0)).saveOrUpdate(existingProduct);
     }

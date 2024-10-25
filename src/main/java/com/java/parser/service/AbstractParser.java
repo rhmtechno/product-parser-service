@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 
 public interface AbstractParser {
-    void parse(InputStream inputStream)throws IOException;
+    void parse(InputStream inputStream,String fileName)throws IOException;
 
     default String checkProductChanges(Product product, String title, BigDecimal price, Integer quantity) {
         if (!product.getTitle().equals(title) ||

@@ -27,7 +27,7 @@ public class ProductController extends BaseResource {
     private final ProductService productService;
     @PostMapping("/upload")
     public ApiResponse<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-            xlsxParserImplService.parse(file.getInputStream());
+            xlsxParserImplService.parse(file.getInputStream(),file.getOriginalFilename());
         return ResponseUtils.createResponseObject(getMessage(ResponseMessage.OPERATION_SUCCESSFUL),"hiii");
            // return ResponseEntity.ok("File processed successfully.");
 

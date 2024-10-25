@@ -2,7 +2,9 @@ package com.java.parser.service.impl;
 
 
 import com.java.parser.common.annotations.NoLogging;
+import com.java.parser.domain.entity.ParseHistory;
 import com.java.parser.domain.entity.Product;
+import com.java.parser.repository.ParseHistoryRepository;
 import com.java.parser.service.AbstractParser;
 import com.java.parser.service.BaseService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -27,11 +30,13 @@ public class XlsxParserImplService extends BaseService implements AbstractParser
     public static final String UPDATED = "UPDATED";
     public static final String UNCHANGED = "UNCHANGED";
     private final ProductService productService;
+    private final ParseHistoryRepository parseHistoryRepository;
 
 
     @Override
-    public void parse(InputStream inputStream) throws IOException {
+    public void parse(InputStream inputStream,String fileName) throws IOException {
         String requestId = UUID.randomUUID().toString();
+        int rowCount=0;
         try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
@@ -49,7 +54,7 @@ public class XlsxParserImplService extends BaseService implements AbstractParser
                     logger.trace("Row "+row.getRowNum()+" does not have enough data, skipping.");
                     continue; // Skip rows that do not have enough data
                 }
-
+                rowCount++;
                 // Extract data from the row
                 String sku = row.getCell(0).getStringCellValue();
                 String title = row.getCell(1).getStringCellValue();
@@ -83,6 +88,7 @@ public class XlsxParserImplService extends BaseService implements AbstractParser
                     }
                 }
             }
+            parseHistoryRepository.save(new ParseHistory(fileName, rowCount, LocalDateTime.now(),requestId));
         }
     }
 
