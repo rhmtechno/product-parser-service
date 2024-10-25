@@ -12,6 +12,7 @@ mvn clean install -Pdev
 ### For Docker Image Build and Run
 
 docker build -t product-parser .
+
 docker run -d -p 8080:8080 --name product-parser-container product-parser
 
 
