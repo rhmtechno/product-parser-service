@@ -16,7 +16,7 @@ docker build -t product-parser .
 docker run -d -p 8080:8080 --name product-parser-container product-parser
 
 
-### For Docker Compose (PostgreSQL Included)
+### For Docker Compose (PostgresSQL Included)
 
 To build the project with Docker Compose (note that tests will be skipped due to the need for a database connection):
 
