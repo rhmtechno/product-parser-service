@@ -5,7 +5,7 @@ Access the Swagger UI for API documentation at: [Swagger UI](http://localhost:80
 
 ## Building the Project
 
-### If Database Connection is Available
+### If Database Connection is Available (Please check db properties at application-dev.yml)
 
 mvn clean install -Pdev
 
