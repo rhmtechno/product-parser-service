@@ -21,4 +21,5 @@ docker run -d -p 8080:8080 --name product-parser-container product-parser
 To build the project with Docker Compose (note that tests will be skipped due to the need for a database connection):
 
 mvn clean install -Pdev -DskipTests
+
 docker-compose up --build
