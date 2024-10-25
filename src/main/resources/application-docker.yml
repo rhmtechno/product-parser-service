@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+
+spring:
+  sleuth:
+    sampler:
+      probability: 1.0
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}?createDatabaseIfNotExist=true
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+
+logging:
+  config: classpath:log/logback-dev.xml

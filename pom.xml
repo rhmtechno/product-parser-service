@@ -184,6 +184,7 @@
 
     <build>
         <finalName>product-parser</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -252,7 +253,32 @@
 
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Any plugins specific to the dev profile can be added here -->
+                </plugins>
+            </build>
+        </profile>
 
+        <profile>
+            <id>docker</id>
+            <properties>
+                <spring.profiles.active>docker</spring.profiles.active>
+                <!-- Add any other properties specific to the docker profile -->
+            </properties>
+            <build>
+                <plugins>
+                    <!-- Any plugins specific to the docker profile can be added here -->
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 
 </project>
