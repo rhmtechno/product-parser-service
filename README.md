@@ -1,4 +1,4 @@
-Product Parser
+##### Product Parser (sample products_data.xlsx file included in project Directory)
 
 ## API Documentation
 Access the Swagger UI for API documentation at: [Swagger UI](http://localhost:8080/swagger-ui/index.htm)
