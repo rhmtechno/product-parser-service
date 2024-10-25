@@ -41,9 +41,14 @@ public class ProductService extends BaseService {
         productRepository.save(product);
     }
 
-    public List<ProductDto> getAllProducts() {
+    public PaginationResponse<ProductDto> getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
         logger.trace("Fetching all products from the database");
-        return productRepository.findAll().stream().map(Mapper::mapToDto).collect(Collectors.toList());
+        PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
+        Pageable pageable = PageUtils.getPageable(paginationRequest);
+        Page<ProductDto> page = productRepository.findAll(pageable).map(Mapper::mapToDto);
+        return page.getContent().isEmpty() ?
+                PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
+                PageUtils.mapToPaginationResponseDto(page, paginationRequest);
     }
 
     public Optional<ProductDto> getProductDtoBySku(String sku) {

@@ -37,8 +37,13 @@ public class ProductController extends BaseResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAllProducts());
+    public  ApiResponse<PaginationResponse<ProductDto>> getAllProducts(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+                                                           @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                                           @RequestParam(required = false, defaultValue = "id") String sortBy,
+                                                           @RequestParam(required = false, defaultValue = "asc") String sortOrder) {
+
+        return ResponseUtils.createResponseObject(getMessage(ResponseMessage.OPERATION_SUCCESSFUL), productService.getAllProducts(pageNumber, pageSize, sortBy, sortOrder));
+
     }
 
     @GetMapping("/{sku}")
