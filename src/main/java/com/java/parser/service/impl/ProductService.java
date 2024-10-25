@@ -2,15 +2,19 @@ package com.java.parser.service.impl;
 
 
 import com.java.parser.common.utils.Mapper;
+import com.java.parser.common.utils.PageUtils;
+import com.java.parser.domain.common.PaginationRequest;
 import com.java.parser.domain.entity.ChangeHistory;
 import com.java.parser.domain.entity.Product;
 import com.java.parser.domain.response.ChangeHistoryDto;
+import com.java.parser.domain.response.PaginationResponse;
 import com.java.parser.domain.response.ProductDto;
 import com.java.parser.repository.ChangeHistoryRepository;
 import com.java.parser.repository.ProductRepository;
 import com.java.parser.service.BaseService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -51,7 +55,13 @@ public class ProductService extends BaseService {
         changeHistoryRepository.save(changeHistory);
     }
 
-    public List<ChangeHistoryDto> getChangeHistory() {
-        return changeHistoryRepository.findAllByOrderByTimestampDesc().stream().map(Mapper::changeHistoryDto).collect(Collectors.toList());
+    public PaginationResponse<ChangeHistoryDto> getChangeHistory(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
+        Pageable pageable = PageUtils.getPageable(paginationRequest);
+        Page<ChangeHistoryDto> page = changeHistoryRepository.findAll(pageable).map(Mapper::changeHistoryDto);
+        return page.getContent().isEmpty() ?
+                PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
+                PageUtils.mapToPaginationResponseDto(page, paginationRequest);
+
     }
 }
