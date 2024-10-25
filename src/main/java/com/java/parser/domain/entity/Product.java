@@ -22,11 +22,13 @@ public class Product extends BaseEntity{
     private String title;
     private BigDecimal price;
     private Integer quantity;
+    private String requestId;
 
-    public Product(String sku, String title, BigDecimal price, Integer quantity) {
+    public Product(String sku, String title, BigDecimal price, Integer quantity, String requestId) {
         this.sku = sku;
         this.title = title;
         this.price = price;
         this.quantity = quantity;
+        this.requestId = requestId;
     }
 }

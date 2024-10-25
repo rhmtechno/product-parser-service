@@ -2,6 +2,7 @@ package com.java.parser.api;
 
 
 import com.java.parser.common.annotations.NoLogging;
+import com.java.parser.domain.response.ChangeHistoryDto;
 import com.java.parser.domain.response.ProductDto;
 import com.java.parser.service.impl.ProductService;
 import com.java.parser.service.impl.XlsxParserImplService;
@@ -41,5 +42,10 @@ public class ProductController {
         return productService.getProductDtoBySku(sku)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/change-history")
+    public List<ChangeHistoryDto> getChangeHistory() {
+        return productService.getChangeHistory();
     }
 }

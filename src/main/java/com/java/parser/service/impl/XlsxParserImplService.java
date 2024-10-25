@@ -6,7 +6,6 @@ import com.java.parser.domain.entity.Product;
 import com.java.parser.service.AbstractParser;
 import com.java.parser.service.BaseService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Iterator;
+import java.util.UUID;
 
 
 @Service
@@ -23,10 +23,15 @@ import java.util.Iterator;
 @NoLogging
 public class XlsxParserImplService extends BaseService implements AbstractParser {
 
-    private final ProductService productService; ;
+    public static final String ADDED = "ADDED";
+    public static final String UPDATED = "UPDATED";
+    public static final String UNCHANGED = "UNCHANGED";
+    private final ProductService productService;
+
 
     @Override
     public void parse(InputStream inputStream) throws IOException {
+        String requestId = UUID.randomUUID().toString();
         try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             Sheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rowIterator = sheet.iterator();
@@ -56,19 +61,22 @@ public class XlsxParserImplService extends BaseService implements AbstractParser
 
                 if (product == null) {
                     logger.trace("Adding new product with SKU: "+ sku);
-                    productService.saveOrUpdate(new Product(sku, title, price, quantity));
+                    productService.saveOrUpdate(new Product(sku, title, price, quantity,requestId));
+                    productService.logChange(sku, ADDED,requestId);
                 } else {
                     String changeStatus = checkProductChanges(product, title, price, quantity);
                     switch (changeStatus) {
-                        case "UPDATED":
+                        case UPDATED:
                             logger.trace("Updating product with SKU: "+ sku);
                             product.setTitle(title);
                             product.setPrice(price);
                             product.setQuantity(quantity);
                             productService.saveOrUpdate(product);
+                            productService.logChange(sku, UPDATED,requestId);
                             break;
-                        case "UNCHANGED":
+                        case UNCHANGED:
                             logger.trace("Product with SKU: {} is unchanged "+ sku);
+                            productService.logChange(sku, UNCHANGED,requestId);
                             break;
                         default:
                             logger.trace("Unexpected case for SKU: "+ sku);
