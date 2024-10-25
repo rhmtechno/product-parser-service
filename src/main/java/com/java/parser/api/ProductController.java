@@ -2,6 +2,9 @@ package com.java.parser.api;
 
 
 import com.java.parser.common.annotations.NoLogging;
+import com.java.parser.common.utils.ResponseUtils;
+import com.java.parser.domain.common.ApiResponse;
+import com.java.parser.domain.enums.ResponseMessage;
 import com.java.parser.domain.response.ChangeHistoryDto;
 import com.java.parser.domain.response.ProductDto;
 import com.java.parser.service.impl.ProductService;
@@ -18,18 +21,16 @@ import java.util.List;
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 @NoLogging
-public class ProductController {
+public class ProductController extends BaseResource {
 
     private final XlsxParserImplService xlsxParserImplService;
     private final ProductService productService;
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
-        try {
+    public ApiResponse<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
             xlsxParserImplService.parse(file.getInputStream());
-            return ResponseEntity.ok("File processed successfully.");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Error processing file.");
-        }
+        return ResponseUtils.createResponseObject(getMessage(ResponseMessage.OPERATION_SUCCESSFUL),"hiii");
+           // return ResponseEntity.ok("File processed successfully.");
+
     }
 
     @GetMapping

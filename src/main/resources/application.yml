@@ -41,6 +41,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    out-of-order: true
+    ignore-migration-patterns: "*:missing"
   sql:
     init:
       mode: always

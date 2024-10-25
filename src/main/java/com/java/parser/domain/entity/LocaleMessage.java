@@ -20,7 +20,7 @@ public class LocaleMessage implements Serializable {
     @Column(name = "LOCALE")
     private String locale;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT",columnDefinition = "TEXT")
     private String content;
 
     @Column(name = "VERSION")
