@@ -8,4 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ParseHistoryRepository extends JpaRepository<ParseHistory,Long> {
+    ParseHistory findByRequestId(String requestId);
 }

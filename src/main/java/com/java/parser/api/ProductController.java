@@ -5,10 +5,7 @@ import com.java.parser.common.annotations.NoLogging;
 import com.java.parser.common.utils.ResponseUtils;
 import com.java.parser.domain.common.ApiResponse;
 import com.java.parser.domain.enums.ResponseMessage;
-import com.java.parser.domain.response.ChangeHistoryDto;
-import com.java.parser.domain.response.PaginationResponse;
-import com.java.parser.domain.response.ParseHistoryDto;
-import com.java.parser.domain.response.ProductDto;
+import com.java.parser.domain.response.*;
 import com.java.parser.service.impl.ProductService;
 import com.java.parser.service.impl.XlsxParserImplService;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +26,9 @@ public class ProductController extends BaseResource {
     private final ProductService productService;
 
     @PostMapping("/upload")
-    public ApiResponse<String> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
-        xlsxParserImplService.parse(file.getInputStream(), file.getOriginalFilename());
-        return ResponseUtils.createResponseObject(getMessage(ResponseMessage.OPERATION_SUCCESSFUL), "hiii");
-        // return ResponseEntity.ok("File processed successfully.");
-
+    public ApiResponse<FileUploadResponse> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseUtils.createResponseObject(getMessage(ResponseMessage.OPERATION_SUCCESSFUL), xlsxParserImplService.parse(file.getInputStream(), file.getOriginalFilename())
+);
     }
 
     @GetMapping

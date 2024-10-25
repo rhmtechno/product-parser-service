@@ -4,6 +4,7 @@ package com.java.parser.service.impl;
 import com.java.parser.common.annotations.NoLogging;
 import com.java.parser.domain.entity.ParseHistory;
 import com.java.parser.domain.entity.Product;
+import com.java.parser.domain.response.FileUploadResponse;
 import com.java.parser.repository.ParseHistoryRepository;
 import com.java.parser.service.AbstractParser;
 import com.java.parser.service.BaseService;
@@ -33,7 +34,7 @@ public class XlsxParserImplService extends BaseService implements AbstractParser
 
 
     @Override
-    public void parse(InputStream inputStream,String fileName) throws IOException {
+    public FileUploadResponse parse(InputStream inputStream, String fileName) throws IOException {
         String requestId = UUID.randomUUID().toString();
         int rowCount=0;
         try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
@@ -89,6 +90,7 @@ public class XlsxParserImplService extends BaseService implements AbstractParser
             }
             productService.saveParseDetails(new ParseHistory(fileName, rowCount, LocalDateTime.now(),requestId));
         }
+       return productService.getFileUploadResponse(requestId);
     }
 
 
