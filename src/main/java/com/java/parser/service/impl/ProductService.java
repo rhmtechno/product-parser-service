@@ -1,12 +1,14 @@
 package com.java.parser.service.impl;
 
 
+import com.java.parser.common.exceptions.RecordNotFoundException;
 import com.java.parser.common.utils.Mapper;
 import com.java.parser.common.utils.PageUtils;
 import com.java.parser.domain.common.PaginationRequest;
 import com.java.parser.domain.entity.ChangeHistory;
 import com.java.parser.domain.entity.ParseHistory;
 import com.java.parser.domain.entity.Product;
+import com.java.parser.domain.enums.ResponseMessage;
 import com.java.parser.domain.response.ChangeHistoryDto;
 import com.java.parser.domain.response.PaginationResponse;
 import com.java.parser.domain.response.ParseHistoryDto;
@@ -51,9 +53,14 @@ public class ProductService extends BaseService {
                 PageUtils.mapToPaginationResponseDto(page, paginationRequest);
     }
 
-    public Optional<ProductDto> getProductDtoBySku(String sku) {
+    public ProductDto getProductDtoBySku(String sku) {
         logger.trace("Fetching product with SKU: "+ sku);
-        return productRepository.findBySku(sku).map(Mapper::mapToDto);
+        Optional<Product> productBySku = productRepository.findBySku(sku);
+        if (productBySku.isPresent()){
+        return  Mapper.mapToDto(productBySku.get());
+        }else {
+            throw new RecordNotFoundException(ResponseMessage.RECORD_NOT_FOUND);
+        }
     }
 
     public void logChange(String sku, String action,String requestId) {

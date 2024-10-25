@@ -37,20 +37,20 @@ public class ProductController extends BaseResource {
     }
 
     @GetMapping
-    public  ApiResponse<PaginationResponse<ProductDto>> getAllProducts(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                                           @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                           @RequestParam(required = false, defaultValue = "id") String sortBy,
-                                                           @RequestParam(required = false, defaultValue = "asc") String sortOrder) {
+    public ApiResponse<PaginationResponse<ProductDto>> getAllProducts(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
+                                                                      @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                                                      @RequestParam(required = false, defaultValue = "id") String sortBy,
+                                                                      @RequestParam(required = false, defaultValue = "asc") String sortOrder) {
 
         return ResponseUtils.createResponseObject(getMessage(ResponseMessage.OPERATION_SUCCESSFUL), productService.getAllProducts(pageNumber, pageSize, sortBy, sortOrder));
 
     }
 
     @GetMapping("/{sku}")
-    public ResponseEntity<ProductDto> getProductBySku(@PathVariable String sku) {
-        return productService.getProductDtoBySku(sku)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ApiResponse<ProductDto> getProductBySku(@PathVariable String sku) {
+        return ResponseUtils.createResponseObject(getMessage(ResponseMessage.OPERATION_SUCCESSFUL), productService.getProductDtoBySku(sku)
+        );
+
     }
 
     @GetMapping("/change-history")
@@ -64,9 +64,9 @@ public class ProductController extends BaseResource {
 
     @GetMapping("/parse-history")
     public ApiResponse<PaginationResponse<ParseHistoryDto>> geParseHistory(@RequestParam(required = false, defaultValue = "0") Integer pageNumber,
-                                                                                      @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                                                                                      @RequestParam(required = false, defaultValue = "timestamp") String sortBy,
-                                                                                      @RequestParam(required = false, defaultValue = "desc") String sortOrder) {
+                                                                           @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                                                           @RequestParam(required = false, defaultValue = "timestamp") String sortBy,
+                                                                           @RequestParam(required = false, defaultValue = "desc") String sortOrder) {
         return ResponseUtils.createResponseObject(getMessage(ResponseMessage.OPERATION_SUCCESSFUL), productService.getParseHistory(pageNumber, pageSize, sortBy, sortOrder));
 
     }
