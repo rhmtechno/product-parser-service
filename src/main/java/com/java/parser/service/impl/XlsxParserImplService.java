@@ -30,7 +30,6 @@ public class XlsxParserImplService extends BaseService implements AbstractParser
     public static final String UPDATED = "UPDATED";
     public static final String UNCHANGED = "UNCHANGED";
     private final ProductService productService;
-    private final ParseHistoryRepository parseHistoryRepository;
 
 
     @Override
@@ -88,7 +87,7 @@ public class XlsxParserImplService extends BaseService implements AbstractParser
                     }
                 }
             }
-            parseHistoryRepository.save(new ParseHistory(fileName, rowCount, LocalDateTime.now(),requestId));
+            productService.saveParseDetails(new ParseHistory(fileName, rowCount, LocalDateTime.now(),requestId));
         }
     }
 

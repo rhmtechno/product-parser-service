@@ -5,11 +5,14 @@ import com.java.parser.common.utils.Mapper;
 import com.java.parser.common.utils.PageUtils;
 import com.java.parser.domain.common.PaginationRequest;
 import com.java.parser.domain.entity.ChangeHistory;
+import com.java.parser.domain.entity.ParseHistory;
 import com.java.parser.domain.entity.Product;
 import com.java.parser.domain.response.ChangeHistoryDto;
 import com.java.parser.domain.response.PaginationResponse;
+import com.java.parser.domain.response.ParseHistoryDto;
 import com.java.parser.domain.response.ProductDto;
 import com.java.parser.repository.ChangeHistoryRepository;
+import com.java.parser.repository.ParseHistoryRepository;
 import com.java.parser.repository.ProductRepository;
 import com.java.parser.service.BaseService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 public class ProductService extends BaseService {
     private final ProductRepository productRepository;
     private final ChangeHistoryRepository changeHistoryRepository;
+    private final ParseHistoryRepository parseHistoryRepository;
+
 
     public Product getProductBySku(String sku) {
         return productRepository.findBySku(sku).orElse(null);
@@ -63,5 +68,18 @@ public class ProductService extends BaseService {
                 PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
                 PageUtils.mapToPaginationResponseDto(page, paginationRequest);
 
+    }
+
+    public PaginationResponse<ParseHistoryDto> getParseHistory(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+        PaginationRequest paginationRequest = PageUtils.mapToPaginationRequest(pageNumber, pageSize, sortBy, sortOrder);
+        Pageable pageable = PageUtils.getPageable(paginationRequest);
+        Page<ParseHistoryDto> page = parseHistoryRepository.findAll(pageable).map(Mapper::parseHistoryDto);
+        return page.getContent().isEmpty() ?
+                PageUtils.mapToPaginationResponseDto(Page.empty(), paginationRequest) :
+                PageUtils.mapToPaginationResponseDto(page, paginationRequest);
+    }
+
+    public void saveParseDetails(ParseHistory parseHistory) {
+        parseHistoryRepository.save(parseHistory);
     }
 }
