@@ -275,6 +275,7 @@
             <id>docker</id>
             <properties>
                 <spring.profiles.active>docker</spring.profiles.active>
+                <maven.test.skip>true</maven.test.skip>
                 <!-- Add any other properties specific to the docker profile -->
             </properties>
             <build>

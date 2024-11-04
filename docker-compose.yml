@@ -15,6 +15,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=admin
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_ACTIVE_PROFILE=docker
 
   db:
     image: postgres:13-alpine

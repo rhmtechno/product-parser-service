@@ -24,7 +24,7 @@ info:
 
 spring:
   profiles:
-    active: dev
+    active: ${SPRING_ACTIVE_PROFILE:dev}
   application:
     name: parser-service
   lifecycle:
